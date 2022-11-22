@@ -19,18 +19,18 @@ module Decoder(
 	
 	reg [19:0] sclk;
     
-	integer j = -1;
-    integer prev = 0; 
+	integer state = 1;
+    integer prev_state = 0; 
 
 
     always @(posedge btnR) begin
-	   j <= j + 1;
+	   state <= state + 1;
 	end
 
 	always @(posedge clk) begin
-			if(prev != j) begin
+			if(prev_state != state) begin
                 DecodeOut <= 4'b1111;
-                prev <= j;
+                prev_state <= state;
             end    
 
 			// 1ms

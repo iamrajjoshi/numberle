@@ -114,7 +114,7 @@ module DisplayController(
 	
 	always @(*) begin
         if (counter % 100001 == 0) begin
-            case(counter[19:12])
+            case(counter[19:18])
                 2'b00: begin
                     if (number[3:0] != 4'hF) begin
                         anode = 4'b0111; 

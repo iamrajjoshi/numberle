@@ -32,7 +32,7 @@ module PmodKYPD(
 			.Row(JA[7:4]),
 			.Col(JA[3:0]),
 			.DecodeOut(Decode),
-			.btnR(debounced_btnR),
+			.btnR(debounced_btnR)
 	);
 
     Debouncing debouncerR(
