@@ -27,12 +27,12 @@ module PmodKYPD(
     wire debounced_btnR;
     wire debounced_btnL;
 
-	Decoder C0(
+	Decoder decoder(
 			.clk(clk),
 			.Row(JA[7:4]),
 			.Col(JA[3:0]),
 			.DecodeOut(Decode),
-			.btnR(debounced_btnR)
+			.btnR(debounced_btnR),
 	);
 
     Debouncing debouncerR(
@@ -47,7 +47,7 @@ module PmodKYPD(
         .pb_out(debounced_btnL)
     );
 
-	DisplayController C1(
+	DisplayController dc(
 			.btnR(debounced_btnR),
 			.btnL(debounced_btnL),
 			.DispVal(Decode),
@@ -57,7 +57,7 @@ module PmodKYPD(
 			.led(led)
 	);
 	
-	HexToLED C3(
+	HexToLED h2l(
 	       .hex(hex_val),
 	       .seg(seg)
 	);
