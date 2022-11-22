@@ -4,7 +4,7 @@ module HexToLED(
 );
 
 
-  always @ (hex)
+    always @ (*)
   begin
     case (hex)
       // segment order: GFEDCBA (active low)
