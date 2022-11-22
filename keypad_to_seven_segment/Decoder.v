@@ -4,10 +4,12 @@ module Decoder(
     clk,
     Row,
     Col,
-    DecodeOut
+    DecodeOut,
+    btnR
     );
 
-    input clk;						// 100MHz onboard clock
+    input clk;
+    input btnR;						// 100MHz onboard clock
     input [3:0] Row;				// Rows on KYPD
     output [3:0] Col;			// Columns on KYPD
     output [3:0] DecodeOut;	// Output data
@@ -18,9 +20,18 @@ module Decoder(
 	
 	// Count register
 	reg [19:0] sclk;
+    integer j = 4;
+    integer prev = 0; 
+    always @(posedge btnR) begin
+	   j <= j + 4;
+	end
 
 	always @(posedge clk) begin
-			DecodeOut <= 4'b1111;
+//			DecodeOut <= 4'b1111;
+            if(prev != j) begin
+                DecodeOut <= 4'b1111;
+                prev <= j;
+            end    
 			// 1ms
 			if (sclk == 20'b00011000011010100000) begin
 				//C1
