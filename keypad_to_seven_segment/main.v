@@ -3,17 +3,21 @@
 module PmodKYPD(
     clk,
 	btnR,
+	btnU,
 	btnL,
     JA,
     an,
     seg,
+    dp,
 	led
     );
 	 
 	input btnR;
+	input btnU;
 	input btnL;
+	output dp;
 	input clk;					// 100Mhz onboard clock
-	inout [7:0] JA;			// Port JA on Nexys3, JA[3:0] is Columns, JA[10:7] is rows
+	inout [7:0] JA;			    // Port JA on Nexys3, JA[3:0] is Columns, JA[10:7] is rows
 	output [3:0] an;			// Anodes on seven segment display
 	output [6:0] seg;			// Cathodes on seven segment display
 	output [15:0] led;
@@ -25,6 +29,7 @@ module PmodKYPD(
 	wire [15:0] led;
 
     wire debounced_btnR;
+    wire debounced_btnU;
     wire debounced_btnL;
 
 	Decoder decoder(
@@ -46,14 +51,22 @@ module PmodKYPD(
         .pb_1(btnL),
         .pb_out(debounced_btnL)
     );
+    
+    Debouncing debouncerU(
+        .clk(clk),
+        .pb_1(btnU),
+        .pb_out(debounced_btnU)
+    );
 
 	DisplayController dc(
 			.btnR(debounced_btnR),
+			.btnU(debounced_btnU),
 			.btnL(debounced_btnL),
 			.DispVal(Decode),
 			.clock(clk),
 			.anode(an),
 			.hex_out(hex_val),
+			.dp(dp),
 			.led(led)
 	);
 	
