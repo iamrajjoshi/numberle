@@ -5,6 +5,7 @@ module PmodKYPD(
 	btnR,
 	btnU,
 	btnL,
+	btnD,
     JA,
     an,
     seg,
@@ -15,9 +16,10 @@ module PmodKYPD(
 	input btnR;
 	input btnU;
 	input btnL;
+	input btnD;
 	output dp;
 	input clk;					// 100Mhz onboard clock
-	inout [7:0] JA;			    // Port JA on Nexys3, JA[3:0] is Columns, JA[10:7] is rows
+	inout [7:0] JA;			// Port JA on Nexys3, JA[3:0] is Columns, JA[10:7] is rows
 	output [3:0] an;			// Anodes on seven segment display
 	output [6:0] seg;			// Cathodes on seven segment display
 	output [15:0] led;
@@ -31,15 +33,16 @@ module PmodKYPD(
     wire debounced_btnR;
     wire debounced_btnU;
     wire debounced_btnL;
-
-	integer digit = 0;
-
+    wire debounced_btnD;
+    
+    wire [15:0] final_guess;
+	
 	Decoder decoder(
-		.clk(clk),
-		.Row(JA[7:4]),
-		.Col(JA[3:0]),
-		.DecodeOut(Decode),
-		.btnR(debounced_btnR)
+			.clk(clk),
+			.Row(JA[7:4]),
+			.Col(JA[3:0]),
+			.DecodeOut(Decode),
+			.btnR(debounced_btnR)
 	);
 
     Debouncing debouncerR(
@@ -59,20 +62,35 @@ module PmodKYPD(
         .pb_1(btnU),
         .pb_out(debounced_btnU)
     );
+    
+    Debouncing debouncerD(
+        .clk(clk),
+        .pb_1(btnD),
+        .pb_out(debounced_btnD)
+    );
 
 	DisplayController dc(
-		.btnU(debounced_btnU),
-		.clock(clk),
-		.anode(an),
-		.hex_out(hex_val),
-		.dp(dp),
-		.led(led)
+			.btnR(debounced_btnR),
+			.btnU(debounced_btnU),
+			.btnL(debounced_btnL),
+			.btnD(debounced_btnD),
+			.DispVal(Decode),
+			.clock(clk),
+			.anode(an),
+			.hex_out(hex_val),
+			.dp(dp),
+			.led(led),
+			.final_guess(final_guess)
 	);
 	
 	HexToLED h2l(
 	       .hex(hex_val),
 	       .seg(seg)
 	);
-	       
+	
 
+    LFSR rng (
+        .i_Clk(clk),
+        .o_LFSR_Data(final_guess)
+     );
 endmodule

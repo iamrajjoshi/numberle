@@ -21,8 +21,8 @@ module HexToLED(
       4'hA : seg = 7'b0000111; // t
       4'hB : seg = 7'b0101111; // r 
       4'hC : seg = 7'b0010001; // y
-      4'hD : seg = 7'b0100001;
-      4'hE : seg = 7'b0000110;
+      4'hD : seg = 7'b1000111; // L
+      4'hE : seg = 7'b0000110; // E
       4'hF : seg = 7'b1111111;
       default : seg = 7'b1111111;
     endcase
