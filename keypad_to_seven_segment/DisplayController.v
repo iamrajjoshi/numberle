@@ -52,7 +52,7 @@ module DisplayController(
 	
 	
 	always @(posedge btnD) begin
-	       guess = 16'h7642;
+	       guess = final_guess;
            if (guess[3:0] > 4'h9) guess[3] = 1'b0;
            if (guess[7:4] > 4'h9) guess[7] = 1'b0;
            if (guess[11:8] > 4'h9) guess[11] = 1'b0;
