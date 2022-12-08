@@ -1,38 +1,25 @@
+// Keyboard input module from Pmod
+
 `timescale 1ns / 1ps
 
-module Decoder(
-    clk,
+module Keyboard_Input(
+    clock,
     Row,
     Col,
-    DecodeOut,
-    btnR
+    out
     );
 
-    input clk;
-    input btnR;
+    input clock;
     input [3:0] Row;
     output [3:0] Col;
-    output [3:0] DecodeOut;
+    output [3:0] out;
 
 	reg [3:0] Col;
-	reg [3:0] DecodeOut;
+	reg [3:0] out;
 	
 	reg [19:0] sclk;
-    
-	integer state = 1;
-    integer prev_state = 0; 
-
-
-    always @(posedge btnR) begin
-	   state <= state + 1;
-	end
-
-	always @(posedge clk) begin
-			if(prev_state != state) begin
-                DecodeOut <= 4'b1111;
-                prev_state <= state;
-            end    
-
+	
+	always @(posedge clock) begin
 			// 1ms
 			if (sclk == 20'b00011000011010100000) begin
 				//C1
@@ -44,19 +31,19 @@ module Decoder(
 			else if(sclk == 20'b00011000011010101000) begin
 				//R1
 				if (Row == 4'b0111) begin
-					DecodeOut <= 4'b0001;		//1
+					out <= 4'b0001;		//1
 				end
 				//R2
 				else if(Row == 4'b1011) begin
-					DecodeOut <= 4'b0100; 		//4
+					out <= 4'b0100; 		//4
 				end
 				//R3
 				else if(Row == 4'b1101) begin
-					DecodeOut <= 4'b0111; 		//7
+					out <= 4'b0111; 		//7
 				end
 				//R4
 				else if(Row == 4'b1110) begin
-					DecodeOut <= 4'b0000; 		//0
+					out <= 4'b0000; 		//0
 				end
 				sclk <= sclk + 1'b1;
 			end
@@ -72,19 +59,19 @@ module Decoder(
 			else if(sclk == 20'b00110000110101001000) begin
 				//R1
 				if (Row == 4'b0111) begin
-					DecodeOut <= 4'b0010; 		//2
+					out <= 4'b0010; 		//2
 				end
 				//R2
 				else if(Row == 4'b1011) begin
-					DecodeOut <= 4'b0101; 		//5
+					out <= 4'b0101; 		//5
 				end
 				//R3
 				else if(Row == 4'b1101) begin
-					DecodeOut <= 4'b1000; 		//8
+					out <= 4'b1000; 		//8
 				end
 				//R4
 				else if(Row == 4'b1110) begin
-					DecodeOut <= 4'b1111; 		//F
+					out <= 4'b1111; 		//F
 				end
 				sclk <= sclk + 1'b1;
 			end
@@ -100,19 +87,19 @@ module Decoder(
 			else if(sclk == 20'b01001001001111101000) begin
 				//R1
 				if(Row == 4'b0111) begin
-					DecodeOut <= 4'b0011; 		//3	
+					out <= 4'b0011; 		//3	
 				end
 				//R2
 				else if(Row == 4'b1011) begin
-					DecodeOut <= 4'b0110; 		//6
+					out <= 4'b0110; 		//6
 				end
 				//R3
 				else if(Row == 4'b1101) begin
-					DecodeOut <= 4'b1001; 		//9
+					out <= 4'b1001; 		//9
 				end
 				//R4
 				else if(Row == 4'b1110) begin
-					DecodeOut <= 4'b1110; 		//E
+					out <= 4'b1110; 		//E
 				end
 
 				sclk <= sclk + 1'b1;
@@ -129,19 +116,19 @@ module Decoder(
 			else if(sclk == 20'b01100001101010001000) begin
 				//R1
 				if(Row == 4'b0111) begin
-					DecodeOut <= 4'b1010; //A
+					out <= 4'b1010; //A
 				end
 				//R2
 				else if(Row == 4'b1011) begin
-					DecodeOut <= 4'b1011; //B
+					out <= 4'b1011; //B
 				end
 				//R3
 				else if(Row == 4'b1101) begin
-					DecodeOut <= 4'b1100; //C
+					out <= 4'b1100; //C
 				end
 				//R4
 				else if(Row == 4'b1110) begin
-					DecodeOut <= 4'b1101; //D
+					out <= 4'b1101; //D
 				end
 				sclk <= 20'b00000000000000000000;
 			end

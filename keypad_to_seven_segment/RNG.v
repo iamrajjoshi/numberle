@@ -1,27 +1,25 @@
+// Generates a 16-bit random number using a Linear Feedback Shift Register (LFSR).
+
 `timescale 1ns / 1ps
-module LFSR (
-   input i_Clk,
-   input [15:0] i_Seed_Data,
-   output [15:0] o_LFSR_Data
+
+module RNG (
+   input clock, // Clock
+   output [15:0] random_number // Random Number
    );
  
-  reg [16:1] r_LFSR = 16'h9999;
-  reg              r_XNOR;
+  reg [16:1] r_LFSR = 16'h9999; // LFSR Register
+  reg r_XNOR; // XNOR of Feedback Polynomials
  
- 
-  // Purpose: Load up LFSR with Seed if Data Valid (DV) pulse is detected.
-  // Othewise just run LFSR when enabled.
-  always @(posedge i_Clk) begin
-           r_LFSR <= {r_LFSR[15:1], r_XNOR};
+  always @(posedge clock) begin
+           r_LFSR <= {r_LFSR[15:1], r_XNOR}; // Generate Next LFSR Value
   end
  
   // Create Feedback Polynomials.  Based on Application Note:
   // http://www.xilinx.com/support/documentation/application_notes/xapp052.pdf
   always @(*) begin
           r_XNOR = r_LFSR[16] ^~ r_LFSR[15] ^~ r_LFSR[13] ^~ r_LFSR[4];
-    end // always @ (*)
+  end
  
+  assign random_number = r_LFSR[16:1];
  
-  assign o_LFSR_Data = r_LFSR[16:1];
- 
-endmodule // LFSR
+endmodule

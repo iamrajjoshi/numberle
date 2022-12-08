@@ -1,11 +1,13 @@
-module HexToLED(
-    input      [3:0] hex, // hex input
-    output reg [6:0] seg  // segments
-);
+//Converts a 4-bit hex value to a 7-bit segment value
 
+`timescale 1ns / 1ps
 
-  always @ (*)
-  begin
+module Hex_To_LED (
+    input      [3:0] hex, // Hex Input
+    output reg [6:0] seg  // Segment Output
+    );
+
+  always @ (*) begin
     case (hex)
       // segment order: GFEDCBA (active low)
       4'h0 : seg = 7'b1000000;
@@ -27,6 +29,5 @@ module HexToLED(
       default : seg = 7'b1111111;
     endcase
   end
-
 
 endmodule
